@@ -35,6 +35,16 @@
         //Events
         $('.carousel').bind('updated', function(e, index) {
           $('.controllers .current').html(index+1);
+          if (index <= 0) {
+            $('.controllers .prev').css('visibility', 'hidden');
+          } else {
+            $('.controllers .prev').css('visibility', 'visible');
+          }
+          if(index >= $('.carousel ul li').length-1){
+            $('.controllers .next').css('visibility', 'hidden');
+          } else {
+            $('.controllers .next').css('visibility', 'visible');
+          }
         });
       });
 
