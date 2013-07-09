@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Untitled Document</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="src/cvSlideCarouselShow.js"></script>
+    <script type="text/javascript">
+
+      $(function() {
+        $('.carousel').cvSlideCarouselShow({
+            viewPort:$('.mask'),
+            autoplay:true,
+            endless: true
+        });
+      });
+
+    </script>
+    <style type="text/css">
+      .carousel {
+        position: relative;
+        overflow: hidden;
+        border: 6px solid #444;
+        width: 150px;
+        height: 150px;
+      }
+      .carousel ul {
+        position: absolute;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .carousel ul li {
+        float: left;
+        width: 150px;
+        height: 150px;
+        color: #fff;
+        font-size: 8em;
+        text-align: center;
+        margin: 0;
+        background: #007cd2;
+        border: solid 1px gray;
+      }
+    </style>
+	</head>
+	<body>
+    <div class="carousel">
+      <div class="mask">
+        <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+          </ul>
+      </div>
+    </div>
+	</body>
+</html>
