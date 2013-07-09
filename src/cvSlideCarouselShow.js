@@ -15,7 +15,6 @@
       return {
         init: function(options) {
           options = $.extend({
-            viewPort: null,
             easing: 'linear',
             duration: 1000,
             classSelectedItem: 'selected',
@@ -31,15 +30,14 @@
             data = $this.data('cvSlideCarouselShow');
 
             if (!data) {
-              $(this).data('cvSlideCarouselShow', {
-                target: $this,
+              $this.data('cvSlideCarouselShow', {
                 settings: options,
-                viewPortContainer: $(options.viewPort).find('ul'),
-                items:  $(options.viewPort).find('ul li'),
-                totalItems: $(options.viewPort).find('ul li').length,
-                itemWidth: $(options.viewPort).find('ul li').outerWidth(true),
-                itemHeight: $(options.viewPort).find('ul li').outerHeight(true),
-                leftValue: $(options.viewPort).find('ul li').outerWidth(true) * (-1),
+                viewPortContainer: $this.find('ul'),
+                items:  $this.find('ul li'),
+                totalItems: $this.find('ul li').length,
+                itemWidth: $this.find('ul li').outerWidth(true),
+                itemHeight: $this.find('ul li').outerHeight(true),
+                leftValue: $this.find('ul li').outerWidth(true) * (-1),
                 currentPosition: options.currentPosition,
                 startItem: options.startItem,
                 moving: false,
@@ -53,31 +51,19 @@
             }
             $(data.viewPortContainer).css({'position': 'relative', 'left': '0px'});
 
-            data.items.bind('click.cvSlideCarouselShow', function(e) {
-              $this.trigger('update', [$(this).index()]);
-              e.preventDefault();
-            });
-
             $(data.items).bind('click.cvSlideCarouselShowEvents', function(e) {
               $(data.items).removeClass(data.settings.classSelectedItem);
               $(this).addClass(data.settings.classSelectedItem);
               data.startItem = $(this).index();
+              $this.trigger('updated', [data.startItem]);
+              $this.cvSlideCarouselShow('slideTo', data.startItem);
               e.preventDefault();
             });
 
             $this.cvSlideCarouselShow('slideTo', data.startItem);
-              if (data.settings.autoplay) {
-                $this.cvSlideCarouselShow('play');
-              }
-          });
-        },
-
-        destroy: function() {
-          return this.each(function() {
-            var $this = $(this);
-            $this.cvSlideCarouselShow('stop');
-            $this.unbind('.cvSlideCarouselShowEvents');
-            $this.removeData('cvSlideCarouselShow');
+            if (data.settings.autoplay) {
+              $this.cvSlideCarouselShow('play');
+            }
           });
         },
 
@@ -151,6 +137,15 @@
             }
             $(data.items).removeClass(data.settings.classSelectedItem);
             $(data.items[data.startItem]).addClass(data.settings.classSelectedItem);
+          });
+        },
+
+        destroy: function() {
+          return this.each(function() {
+            var $this = $(this);
+            $this.cvSlideCarouselShow('stop');
+            $this.unbind('.cvSlideCarouselShowEvents');
+            $this.removeData('cvSlideCarouselShow');
           });
         }
       };

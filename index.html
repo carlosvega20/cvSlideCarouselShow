@@ -9,9 +9,32 @@
 
       $(function() {
         $('.carousel').cvSlideCarouselShow({
-            viewPort:$('.mask'),
-            autoplay:true,
+            viewPort:$('.carousel'),
+            autoplay: true,
             endless: true
+        });
+
+        //API get methods
+        $('.controllers .stop').bind('click', function(e) {
+          $('.carousel').cvSlideCarouselShow('stop');
+        });
+
+        $('.controllers .play').bind('click', function(e) {
+          $('.carousel').cvSlideCarouselShow('play');
+        });
+
+        $('.controllers .next').bind('click', function(e) {
+          $('.carousel').cvSlideCarouselShow('slideTo', $('.carousel .selected').index()+1);
+        });
+
+        $('.controllers .prev').bind('click', function(e) {
+          $('.carousel').cvSlideCarouselShow('slideTo', $('.carousel .selected').index()-1);
+        });
+
+
+        //Events
+        $('.carousel').bind('updated', function(e, index) {
+          $('.controllers .current').html(index+1);
         });
       });
 
@@ -46,15 +69,20 @@
 	</head>
 	<body>
     <div class="carousel">
-      <div class="mask">
-        <ul>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
-            <li>5</li>
-          </ul>
-      </div>
+      <ul>
+          <li>1</li>
+          <li>2</li>
+          <li>3</li>
+          <li>4</li>
+          <li>5</li>
+        </ul>
+    </div>
+    <div class="controllers">
+      <p class="stop">stop</p>
+      <p class="play">play</p>
+      <p class="next">next</p>
+      <p class="prev">preview</p>
+      <p class="current">1</p>
     </div>
 	</body>
 </html>
