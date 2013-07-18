@@ -19,9 +19,8 @@
             duration: 1000,
             classSelectedItem: 'selected',
             autoplay: false,
-            endless: false, // true for circular carousel
-            startItem: 0,
-            currentPosition: 0,
+            loop: false, // true for circular carousel
+            currentItem: 0,
             orientationLandscape: true
           }, options);
 
@@ -38,8 +37,7 @@
                 itemWidth: $this.find('ul li').outerWidth(true),
                 itemHeight: $this.find('ul li').outerHeight(true),
                 leftValue: $this.find('ul li').outerWidth(true) * (-1),
-                currentPosition: options.currentPosition,
-                startItem: options.startItem,
+                currentItem: options.currentItem,
                 moving: false,
                 playing: null
               });
@@ -51,15 +49,7 @@
             }
             $(data.viewPortContainer).css({'position': 'relative', 'left': '0px'});
 
-            $(data.items).bind('click.cvSlideCarouselShowEvents', function(e) {
-              $(data.items).removeClass(data.settings.classSelectedItem);
-              $(this).addClass(data.settings.classSelectedItem);
-              data.startItem = $(this).index();
-              $this.cvSlideCarouselShow('slideTo', data.startItem);
-              e.preventDefault();
-            });
-
-            $this.cvSlideCarouselShow('slideTo', data.startItem);
+            $this.cvSlideCarouselShow('slideTo', data.currentItem);
 
             if (data.settings.autoplay) {
               $this.cvSlideCarouselShow('play');
@@ -73,7 +63,7 @@
             data = $(this).data('cvSlideCarouselShow');
             clearInterval(data.playing);
             data.playing = setInterval(function() {
-              $this.cvSlideCarouselShow('slideTo', ++data.startItem);
+              $this.cvSlideCarouselShow('slideTo', ++data.currentItem);
             }, data.settings.duration);
           });
         },
@@ -91,10 +81,10 @@
             data = $(this).data('cvSlideCarouselShow');
             if (!data.moving) {
               data.moving = true;
-            if (data.settings.endless && data.startItem > data.totalItems - 1) {
-              data.startItem = itemN = 0;
-            }else if (data.settings.endless && data.startItem <0) {
-              data.startItem = itemN = data.totalItems - 1;
+            if (data.settings.loop && data.currentItem > data.totalItems - 1) {
+              data.currentItem = itemN = 0;
+            }else if (data.settings.loop && data.currentItem <0) {
+              data.currentItem = itemN = data.totalItems - 1;
             }
 
             var orientation;
@@ -111,34 +101,29 @@
               data.settings.duration,
               data.settings.easing,
               function() {
-                data.startItem = itemN;
-                $this.cvSlideCarouselShow('upDate');
+                data.currentItem = itemN;
+                $this.cvSlideCarouselShow('update');
               }
             );
-            $(data.items[itemN]).trigger('click', [itemN]);
+
+            $(data.items[itemN]).trigger('clicked', [itemN]);
             }
           });
         },
 
-        upDate: function() {
+        update: function() {
           return this.each(function() {
             var $this = $(this),
-                data = $(this).data('cvSlideCarouselShow'),
-                limit = 0;
-            if (data.settings.orientationLandscape) {
-              data.currentPosition = parseInt(data.viewPortContainer.css('left'), 10);
-              limit = data.settings.viewPort.width();
-            }else{
-              data.currentPosition = parseInt(data.viewPortContainer.css('top'), 10);
-              limit = data.settings.viewPort.height();
-            }
-            data.moving = false;
-            if (data.startItem >= data.totalItems-1 && !data.settings.endless){
+                data = $(this).data('cvSlideCarouselShow');
+
+            if (data.currentItem >= data.totalItems-1 && !data.settings.loop){
               $(this).cvSlideCarouselShow('stop');
             }
+
+            data.moving = false;
             $(data.items).removeClass(data.settings.classSelectedItem);
-            $(data.items[data.startItem]).addClass(data.settings.classSelectedItem);
-            $this.trigger('updated', data.startItem);
+            $(data.items[data.currentItem-1]).addClass(data.settings.classSelectedItem);
+            $this.trigger('updated', data.currentItem);
           });
         },
 
@@ -146,7 +131,6 @@
           return this.each(function() {
             var $this = $(this);
             $this.cvSlideCarouselShow('stop');
-            $this.unbind('.cvSlideCarouselShowEvents');
             $this.removeData('cvSlideCarouselShow');
           });
         }

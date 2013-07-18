@@ -9,43 +9,44 @@
 
       $(function() {
         $('.carousel').cvSlideCarouselShow({
-            viewPort:$('.carousel'),
-            autoplay: true,
-            endless: true
+            autoplay: false,
+            loop: true
         });
 
-        //API get methods
-        $('.controllers .stop').bind('click', function(e) {
+        //API
+        var carouselInfo = $('.carousel').data('cvSlideCarouselShow');
+
+        $('.controllers .stop').on('click', function(e) {
           $('.carousel').cvSlideCarouselShow('stop');
         });
 
-        $('.controllers .play').bind('click', function(e) {
+        $('.controllers .play').on('click', function(e) {
           $('.carousel').cvSlideCarouselShow('play');
         });
 
-        $('.controllers .next').bind('click', function(e) {
-          $('.carousel').cvSlideCarouselShow('slideTo', $('.carousel .selected').index()+1);
+        $('.controllers .next').on('click', function(e) {
+          $('.carousel').cvSlideCarouselShow('slideTo', carouselInfo.currentItem+1);
         });
 
-        $('.controllers .prev').bind('click', function(e) {
-          $('.carousel').cvSlideCarouselShow('slideTo', $('.carousel .selected').index()-1);
+        $('.controllers .prev').on('click', function(e) {
+          $('.carousel').cvSlideCarouselShow('slideTo', carouselInfo.currentItem-1);
         });
-
 
         //Events
-        $('.carousel').bind('updated', function(e, index) {
-          $('.controllers .current').html(index+1);
+        $('.carousel').on('updated', function(e, index) {
+          $('.controllers .current').html(index);
           if (index <= 0) {
             $('.controllers .prev').css('visibility', 'hidden');
           } else {
             $('.controllers .prev').css('visibility', 'visible');
           }
-          if(index >= $('.carousel ul li').length-1){
+          if(index >= carouselInfo.totalItems-1){
             $('.controllers .next').css('visibility', 'hidden');
           } else {
             $('.controllers .next').css('visibility', 'visible');
           }
         });
+
       });
 
     </script>
@@ -83,8 +84,6 @@
           <li>1</li>
           <li>2</li>
           <li>3</li>
-          <li>4</li>
-          <li>5</li>
         </ul>
     </div>
     <div class="controllers">
